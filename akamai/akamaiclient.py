@@ -63,35 +63,10 @@ class Akamai:
 				'Content-Type' : 'application/json',
 				'Accept' : 'application/json'
 				}
-		if verb == "GET":
-			r = requests.get(url,headers=headers, json=api_payload, params=query, auth=(self.user, self.password))
-			# Print the result
-			self.http_status = r.status_code
-			self.http_content = r.content
-			content=r.content
-		elif verb == "PUT":
-			r = requests.put(url,headers=headers, json=api_payload, params=query, auth=(self.user, self.password))
-			# Print the result
-			self.http_status = r.status_code
-			self.http_content = r.content
-			content=r.content
-		elif verb == "POST":
-			r = requests.post(url,headers=headers, json=api_payload, params=query, auth=(self.user, self.password))
-			# Print the result
-			self.http_status = r.status_code
-			self.http_content = r.content
-			content=r.content
-		elif verb == "DELETE":
-			r = requests.delete(url,headers=headers, json=api_payload, params=query, auth=(self.user, self.password))
-			# Print the result
-			self.http_status = r.status_code
-			self.http_content = r.content
-			content=r.content
-		else:
-			self.http_status= None
-			self.http_content = None
-			content = {"msg" : "Invalid method" }
+		r = requests.request(verb, url, headers=headers, json=api_payload, params=query, auth=(self.user, self.password))
+		self.http_status = r.status_code
+		self.http_content = r.content
+		content = r.content
 		return (content)
-			
 		
 ####################################################################################################
