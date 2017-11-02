@@ -8,18 +8,34 @@ import pprint
 import helper
 
 # place the API key, account hex id, base url and platform into config.py
-import config
+import config_edgecast as config
     
 assert config.hex,"Error: missing hex account number"
 assert config.token, "Error: missing API token"
 assert config.base_url, "Error: missing base URL"
 assert (config.platform in ['flash', 'small', 'large', 'adn']), "Error: bad or misssing delivery platform"
+assert (config.lambda_region in ['us-east-2', 
+                                'us-east-1', 
+                                'us-west-1', 
+                                'us-west-2', 
+                                'ap-northeast-2', 
+                                'ap-south-1', 
+                                'ap-southeast-1', 
+                                'ap-southeast-2', 
+                                'ap-northeast-1', 
+                                'ca-central-1', 
+                                'eu-central-1', 
+                                'eu-west-1', 
+                                'eu-west-2', 
+                                'sa-east-1' 
+                                ]), "Error: bad or misssing AWS region"
+# http://docs.aws.amazon.com/general/latest/gr/rande.html#lambda_region
 assert config.sourcebucket, "Error: missing S3 bucket"
 
 
 debug=False
 
-region='us-east-1'
+lambda_region=config.lambda_region
 lambda_function = 's3-purge-edgecast'
 memory=1024
 sourcebucket = config.sourcebucket
@@ -28,11 +44,11 @@ RoleName='Lambda_access_S3'
 zipfileName='%s.zip' % lambda_function
 handler='purge-edgecast.main'
 
-iam = boto3.client('iam', region_name=region)
-aws_lambda= boto3.client('lambda', region_name=region)      
-aws_events= boto3.client('events', region_name=region)      
-s3= boto3.client('s3', region_name=region)      
-aws_logs= boto3.client('logs', region_name=region)      
+iam = boto3.client('iam', region_name=lambda_region)
+aws_lambda= boto3.client('lambda', region_name=lambda_region)      
+aws_events= boto3.client('events', region_name=lambda_region)      
+s3= boto3.client('s3', region_name=lambda_region)      
+aws_logs= boto3.client('logs', region_name=lambda_region)      
 
 boto_response=iam.get_user()
 if debug: print pprint.pprint(boto_response)
@@ -95,9 +111,9 @@ for policy in policies:
     except:
         pass
 
-lambda_arn = "arn:aws:lambda:%s:%s:function:%s" % (region, accountid, lambda_function)
+lambda_arn = "arn:aws:lambda:%s:%s:function:%s" % (lambda_region, accountid, lambda_function)
 
-print "Creating function", lambda_function, "in region" , region
+print "Creating function", lambda_function, "in region" , lambda_region
 try: 
     boto_response=aws_lambda.create_function(
         FunctionName=lambda_function,
@@ -126,7 +142,7 @@ except:
         Publish=True
         )
     if debug: print pprint.pprint(boto_response)
-    print 'function %r in %s updated' % (lambda_function, region)
+    print 'function %r in %s updated' % (lambda_function, lambda_region)
     
     boto_response=aws_lambda.update_function_configuration(
         FunctionName=lambda_function,
@@ -139,7 +155,7 @@ except:
         )
     if debug: print pprint.pprint(boto_response)
     
-print "Function", lambda_arn, "in region" , region, "created"
+print "Function", lambda_arn, "in region" , lambda_region, "created"
 
 permission_id = "%s_%s" % (sourcebucket.replace('.', '_'), lambda_function)
 

@@ -11,8 +11,8 @@ import os
 import json 
 import logging
 
-from edgecast.client import Edgecast
-import config
+from edgecastclient import Edgecast
+import config_edgecast as config
 
 # Lambda has some special environment variables
 isLambda = True if "LAMBDA_RUNTIME_DIR" in os.environ else False
