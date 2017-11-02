@@ -1,10 +1,10 @@
-hex='9FD7'
-token='da5d8149-dfa4-4026-a2e6-bd06cac86c8b'
-base_url = 'http://edgecast.cdn.test.danidin.net'
+hex='hhhh'
+token='aaaa-bbbb-ccccccccccc-ddddddd-eeee'
+base_url = 'http://cdn.mydomain.com'
 platform = 'small'  # small|large|flash|adn
 
 lambda_region = 'us-east-1'
-sourcebucket = 'images.globaldots.com'
+sourcebucket = 'mybucket'
 
 sdb_region = 'us-east-1'
 sdb_domain = 'purge-edgecast'
