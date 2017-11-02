@@ -9,7 +9,7 @@ import helper
 
 # place the API key, account hex id, base url and platform into config.py
 import config_edgecast as config
-    
+     
 assert config.hex,"Error: missing hex account number"
 assert config.token, "Error: missing API token"
 assert config.base_url, "Error: missing base URL"
