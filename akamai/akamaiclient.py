@@ -48,6 +48,9 @@ class Akamai:
         assert type(url_list) is list, "Error: expecting a list of assets"
         assert platform in ['production', 'staging'], "Error: %r is wrong platform, must be sproduction or staging" % (
             platform)
+        assert queue in ['default', 'emergency'], "Error: %r is wrong queue, must be 'default' or 'emergency'" % (queue)
+        assert action in ['remove', 'invalidate'], "Error: %r is wrong action, must be 'remove' or 'invalidate'" % (action)
+        assert list_type in ['arl', 'cpcode'], "Error: %r is wrong list type, must be 'arl' or 'cpcode'" % (
             list_type)
 
         payload = {
