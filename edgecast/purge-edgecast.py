@@ -4,7 +4,8 @@
 # purge-edgecast version 1
 #
 # Changelog
-# version 1:   Initial version
+# version 1.0:   Initial version
+# version 1.1:   Support variable number of parm
 
 from __future__ import print_function
 import os
@@ -51,12 +52,20 @@ def main(event, context=None):
     # if context: print(context.logStreamName)
     for record in event['Records']:
         bucket = record['s3']['bucket']['name']
-        key = record['s3']['object']['key'] 
-        edgecast = Edgecast(token, hex)
-        cdn_url = construct_url(base_url, bucket, key)  
+        key = record['s3']['object']['key']
+        credentials = {
+            'token' : token,
+            'hex' : hex
+        }
+        edgecast = Edgecast(**credentials)
+        # edgecast = Edgecast(token=token, hex=hex)
+        cdn_url = construct_url(base_url, bucket, key)
         platformID = edgecast.platforms.get(platform, 8)
         # platform defaults to small (8)
-        purge_response = edgecast.purge(cdn_url, platformID)
+        purge_parameters = {
+            'platform' : platformID
+        }
+        purge_response = edgecast.purge(cdn_url, platform=platformID)
         purge_response_http_status = edgecast.http_status
         cdnEvent = {
                             "url" : cdn_url, 

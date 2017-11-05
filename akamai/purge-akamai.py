@@ -5,7 +5,8 @@
 # https://api.ccu.akamai.com/ccu/v2/docs/
 
 # Changelog
-# version 1:   Initial version
+# version 1.0:   Initial version
+# version 1.1:   Support variable number of parm
 
 from __future__ import print_function
 import os
@@ -52,8 +53,12 @@ def main(event, context=None):
     # accumulate a batch of URLs to purge
     for record in event['Records']:
         bucket = record['s3']['bucket']['name']
-        key = record['s3']['object']['key'] 
-        akamai = Akamai(user, password)
+        key = record['s3']['object']['key']
+        credentials = {
+            'user' : user,
+            'password' : password
+        }
+        akamai = Akamai(**credentials )
         cdn_url = construct_url(base_url, bucket, key)  
         url_list.append(cdn_url)
 

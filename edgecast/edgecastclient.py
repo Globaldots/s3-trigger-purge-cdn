@@ -32,9 +32,9 @@ class Edgecast:
     http_status=0
 
 #..................................................................................................
-    def __init__(self, token, hex):
-        self.token=token
-        self.hex=hex
+    def __init__(self, **kwargs):
+        self.token=kwargs['token']
+        self.hex=['hex']
         self.flashPlatform=2
         self.largePlatform=3
         self.smallPlatform=8
@@ -48,10 +48,10 @@ class Edgecast:
         return None
 
 #..................................................................................................
-    def purge(self, url, platform):
+    def purge(self, url, **kwargs):
         payload = {
             'MediaPath' : url,
-            'MediaType' : platform
+            'MediaType' : kwargs['platform']
             }
         command = "/v2/mcc/customers/%s/edge/purge" % (self.hex)
         query={}
