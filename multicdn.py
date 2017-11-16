@@ -7,25 +7,26 @@ import json
 import yaml
 
 debug=os.environ.get('debug', False)
+config_file=os.environ.get('config_file', 'multicdn.config.yml')
 
 class Multicdn:
     # ..................................................................................................
-    def __init__(self, root='cdnDomains', cdnConfigurations='cdnConfigurations' ,filename='multicdn.config.yml'):
-        self.root=root
+    def __init__(self, buckets_configuration='cdnDomains', cdn_configurations='cdnConfigurations', filename=config_file):
+        self.buckets_configuration=buckets_configuration
         self.filename=filename
-        self.cdn_configurations = cdnConfigurations
+        self.cdn_configurations = cdn_configurations
 
         return None
 
     # ..................................................................................................
-    def getConf(self, root=None, filename=None):
+    def getConf(self, buckets_configuration=None, filename=None):
         # domain: the top level yaml key, NOT an internet domain
-        root = root if root else self.root
+        buckets_configuration = buckets_configuration if buckets_configuration else self.buckets_configuration
         filename = filename if filename else self.filename
         assert os.path.exists(filename), "File %r does not exist" % (filename)
         yml = yaml.load(open(filename))
-        assert root in yml , "Key %r is not in root of file %r" % (root, filename)
-        cdn_list = yml[root]
+        assert buckets_configuration in yml , "Key %r is not in root of file %r" % (buckets_configuration, filename)
+        cdn_list = yml[buckets_configuration]
         cdn_configurations =  self.cdn_configurations
         assert cdn_configurations in yml, "Key %r is not in root of file %r" % (cdn_configurations, filename)
         domain_map = {}
@@ -47,9 +48,9 @@ class Multicdn:
 
 
     # ..................................................................................................
-    def getCDNConf(self, cdnConfigurations=None, filename=None):
+    def getCDNConf(self, cdn_configurations=None, filename=None):
         # domain: the top level yaml key, NOT an internet domain
-        cdn_configurations = cdnConfigurations if cdnConfigurations else self.cdn_configurations
+        cdn_configurations = cdn_configurations if cdn_configurations else self.cdn_configurations
         filename = filename if filename else self.filename
         assert os.path.exists(filename), "File %r does not exist" % (filename)
         yml = yaml.load(open(filename))

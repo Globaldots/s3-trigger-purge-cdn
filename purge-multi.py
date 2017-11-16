@@ -6,6 +6,7 @@
 
 # Changelog
 # version 1:   Initial version
+# Version 2:   full multicdn support
 
 from __future__ import print_function
 import os
@@ -14,8 +15,6 @@ import sys
 import logging
 
 import multicdn
-
-# from vendors.akamai.client import akamai
 from vendors import *
 
 # Lambda has some special environment variables
@@ -57,7 +56,7 @@ def main(event, context=None):
         if debug: print(bucket,key,bucket_cdn_array)
         #
         # The next structure may be too complex, as tests show that S3 fires events one at a time
-        # However, we cannot be sure.
+        # However, we cannot be sure that it will always be so.
         #
         for cdn, cdn_platform_array in bucket_cdn_array.iteritems():
             cdn_config=multi_cdn_configuration.get(cdn, {})
