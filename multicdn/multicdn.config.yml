@@ -1,0 +1,37 @@
+cdnDomains:
+
+  edgecast:
+    mybucket:
+      - host: www.acme.co
+    mybucket-02:
+      - { host: www.acme.it, platform: large }
+      - { host: www.acme.fr, platform: large }
+
+  akamai:
+    mybucket-03:
+      - host: www.xx.co
+    mybucket-02:
+      - host: www.acme.it
+    mybucket:
+      - { host: www.acme.co , platform: staging  }
+      - host: www.acme.co
+
+  highwinds:
+    mybucket:
+      - host: www.acme.co
+
+	  
+	  
+cdnConfigurations:
+
+  edgecast:
+    token: "xxxxx-yyyyyyyyy-zzzzzzzzzz"
+    hex: ABCDEF
+    platform: small
+
+  akamai:
+    user: "shalom@acme.com"
+    password : "secret"
+    platform: production
+
+  # Highwinds is taken from the configuration file in vendors/highwinds

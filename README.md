@@ -1,7 +1,7 @@
 s3-trigger-purge-cdn
 ==========
 A CDN requires an origin server, which can be a S3 bucket. 
-s3-trigger-purge-cdn are python scripts that run as a Lambda function, and are triggered by file uploads to the bucket. Once triggered, the Lambda function will attempt to purge the old file from the CDN cache.
+s3-trigger-purge-cdn are python scripts that run as Lambda functions, and are triggered by file uploads to the bucket. Once triggered, the Lambda function will attempt to purge the old file from the CDN cache.
 Currently supported: 
 - Edgecast
 - Akamai
