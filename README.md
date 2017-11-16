@@ -5,6 +5,7 @@ s3-trigger-purge-cdn are python scripts that run as Lambda functions, and are tr
 Currently supported: 
 - Edgecast
 - Akamai
+- Highwinds
 
 Features:
 - *Python based*: Easy to set up and maintain
@@ -14,8 +15,8 @@ Usage
 ==========
 1. Install and configure Python, pip and Boto3
 2. In the project directory, run the following command: `pip install -r requirements.txt -t .` This is in order to be able to create a full deployable package for Lambda
-3. Update the config file. 
-4. Run the installation script. It will upload the function and its dependencies to AWS Lambda , as well as create the necessary roles, policies and triggers. 
+3. Update the config files. There is a master YAML file, but credentials can also be managed in the `config.py` files in each vendor's folder. 
+4. Run the installation script. It will upload the function and its dependencies to AWS Lambda, as well as create the necessary roles, policies and triggers. 
 
 Additional Notes
 =========
