@@ -13,6 +13,13 @@ Features:
 - *Python based*: Easy to set up and maintain
 - *Uses Lambda environment variables*: Modify the environment variables to modify the Lambda behavior
 
+Environment variables
+==========
+Environment variables will be loaded only at the Lambda cold start
+* `debug` <true|false>
+* `config_file` defaults to multicdn.config.yml
+
+
 General Usage
 ==========
 1. Install and configure Python, pip and Boto3
