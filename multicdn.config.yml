@@ -28,9 +28,9 @@ cdnDomains:
   fastly:
     mybucket:
       - host: www.acme.co
-	  
-	  
-	  
+      
+      
+      
 cdnConfigurations:
 
   edgecast:
