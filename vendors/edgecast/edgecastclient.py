@@ -89,7 +89,11 @@ class Edgecast:
             command = "/v2/mcc/customers/%s/edge/purge" % (self.hex)
             query={}
             result = self.executeAPI( command,  payload, query , verb='PUT' )
-            purge_results.append(json.loads(result))
+            result_item = {
+                "url": url,
+                "result": json.loads(result)
+            }
+            purge_results.append(result_item)
 
         return purge_results
 

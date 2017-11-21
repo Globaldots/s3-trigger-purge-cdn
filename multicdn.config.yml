@@ -20,6 +20,15 @@ cdnDomains:
     mybucket:
       - host: www.acme.co
 
+  cloudflare:
+    mybucket:
+      # You must use the zone id as the platform identifier
+      - { host: www.acme.co , platform: cloudflare-zone-id  }
+
+  fastly:
+    mybucket:
+      - host: www.acme.co
+	  
 	  
 	  
 cdnConfigurations:
@@ -34,4 +43,11 @@ cdnConfigurations:
     password : "secret"
     platform: production
 
-  # Highwinds is taken from the configuration file in vendors/highwinds
+# To demonstrate how defaults are used, the configuration for highwinds is taken from the configuration file in vendors/highwinds
+  
+  cloudflare:
+	email: "shalom@acme.net"
+	apikey: "aaaaaaaaaaaaaaaaaaaaa"
+
+  fastly:
+	token: "xxxxxxxxxxxxxxxxxxxx"

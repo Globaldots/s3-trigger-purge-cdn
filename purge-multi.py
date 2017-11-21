@@ -87,7 +87,9 @@ def main(event, context=None):
                                 "response" : purge_response
                                 }
                         }
-                if  purge_response_http_status not in range (200,299) or 'error' in cdn_instance.http_content.lower():
+                # if  purge_response_http_status not in range (200,299) or 'error' in cdn_instance.http_content.lower():
+                # cloudflare was returning false positives because their response has an empty 'error' key even on success
+                if purge_response_http_status not in range(200, 299):
                     logger.error('HTTP status: {} ; {}'.format(purge_response_http_status, json.dumps(cdnEvent) ) )
                 else:
                     logger.info(json.dumps(cdnEvent))

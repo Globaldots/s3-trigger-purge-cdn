@@ -2,10 +2,17 @@ s3-trigger-purge-cdn
 ==========
 A CDN requires an origin server, which can be a S3 bucket. 
 s3-trigger-purge-cdn are python scripts that run as Lambda functions, and are triggered by file uploads to the bucket. Once triggered, the Lambda function will attempt to purge the old file from the CDN cache.
-Currently supported: 
-- Edgecast standalone
-- Akamai standalone
-- Edgecast, Akamai and Highwinds in a multi-cdn setup. This is the main project. 
+Currently supported CDN vendors: 
+
+- Akamai 
+- Cloudflare
+- Edgecast
+- Fastly
+- Highwinds
+
+*Standalone Legacy mode* 
+- Edgecast
+- Akamai
 
 While I started as a project with separate parts for each CDN vendor, the standalone parts will not be maintained anymore. 
 
@@ -30,5 +37,8 @@ General Usage
 Additional Notes
 =========
 Creating an Edgecast API key: https://support.globaldots.com/hc/en-us/articles/115004003749-Edgecast-Allowing-API-access
+
+Adding authentication to Fastly purge: https://docs.fastly.com/guides/purging/authenticating-api-purge-requests 
+
 Ask your Akamai account manager or reseller for help with setting up a user for purging.
 
