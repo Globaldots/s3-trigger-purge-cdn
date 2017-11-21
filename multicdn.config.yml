@@ -43,11 +43,11 @@ cdnConfigurations:
     password : "secret"
     platform: production
 
-# To demonstrate how defaults are used, the configuration for highwinds is taken from the configuration file in vendors/highwinds
+   # To demonstrate how defaults are used, the configuration for highwinds is taken from the configuration file in vendors/highwinds
   
   cloudflare:
-	email: "shalom@acme.net"
-	apikey: "aaaaaaaaaaaaaaaaaaaaa"
+    email: "shalom@acme.net"
+    apikey: "aaaaaaaaaaaaaaaaaaaaa"
 
   fastly:
-	token: "xxxxxxxxxxxxxxxxxxxx"
+    token: "xxxxxxxxxxxxxxxxxxxx"
