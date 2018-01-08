@@ -72,7 +72,7 @@ class Edgecast:
         return None
 
 #..................................................................................................
-    def purge(self, url_list, **kwargs):
+    def purgeOld(self, url_list, **kwargs):
         # if no parameters passed, initialize to an empty set.
         kwargs = kwargs if kwargs is not None else {}
         # retrieve dynamic parameters and set defaults
@@ -96,6 +96,60 @@ class Edgecast:
             purge_results.append(result_item)
 
         return purge_results
+
+#..................................................................................................
+    def purge(self, url_list, **kwargs):
+        # if no parameters passed, initialize to an empty set.
+        kwargs = kwargs if kwargs is not None else {}
+        kwargs['action'] = 'purge'
+        # retrieve dynamic parameters and set defaults
+        edge_results = self.edge(url_list, **kwargs)
+
+        return edge_results
+
+#..................................................................................................
+    def load(self, url_list, **kwargs):
+        # if no parameters passed, initialize to an empty set.
+        kwargs = kwargs if kwargs is not None else {}
+        kwargs['action'] = 'load'
+        # retrieve dynamic parameters and set defaults
+        edge_results = self.edge(url_list, **kwargs)
+
+        return edge_results
+
+
+#..................................................................................................
+    def edge(self, url_list, **kwargs):
+        # if no parameters passed, initialize to an empty set.
+        kwargs = kwargs if kwargs is not None else {}
+        # retrieve dynamic parameters and set defaults
+        platform = kwargs.get('platform', config_platform)
+        platform = platform if bool(platform) else 'small'
+        action = kwargs.get('action', None)
+        EdgeNodeRegionIds = kwargs.get('regions', None)
+        
+        assert type(url_list) is list, "Error: expecting a list of assets"
+        assert platform in self.platforms, "Error: %r is an unsupported platform" % (platform)
+        assert action in ['load', 'purge'], "Error: action %r is not load or purge" % (action)
+        edge_results = []
+        for url in url_list:
+            payload = {
+                'MediaPath' : url,
+                'MediaType' : self.platforms[platform]
+                }
+            if EdgeNodeRegionIds:
+                payload['EdgeNodeRegionIds']=EdgeNodeRegionIds
+            command = "/v2/mcc/customers/%s/edge/%s" % (self.hex, action)
+            query={}
+            result = self.executeAPI( command,  payload, query , verb='PUT' )
+            result_item = {
+                "action" : action, 
+                "url": url,
+                "result": json.loads(result)
+            }
+            edge_results.append(result_item)
+
+        return edge_results
 
 
 #..................................................................................................
