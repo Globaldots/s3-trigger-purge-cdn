@@ -13,6 +13,7 @@ Currently supported CDN vendors:
 *Standalone Legacy mode* 
 - Edgecast
 - Akamai
+- Highwinds
 
 While I started as a project with separate parts for each CDN vendor, the standalone parts will not be maintained anymore. 
 
