@@ -2,6 +2,7 @@ cdnDomains:
 
   edgecast:
     mybucket:
+      - action: load 
       - host: www.acme.co
     mybucket-02:
       - { host: www.acme.it, platform: large }

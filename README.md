@@ -20,6 +20,7 @@ While I started as a project with separate parts for each CDN vendor, the standa
 Features:
 - *Python based*: Easy to set up and maintain
 - *Uses Lambda environment variables*: Modify the environment variables to modify the Lambda behavior
+- *purge or load*: On Edgecast, you can decide whether to purge from the edge or load onto the edge
 
 Environment variables
 ==========

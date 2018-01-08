@@ -70,11 +70,21 @@ def main(event, context=None):
 
             for platform, host_list in cdn_platform_array.iteritems():
                 url_list=[]
+                action='purge' # by default
                 for host_element in host_list:
-                    cdn_url = cdn_instance.construct_url(host_element['host'], bucket, key)
-                    url_list.append(cdn_url)
+                    if host_element.get('host'):
+                        cdn_url = cdn_instance.construct_url(host_element['host'], bucket, key)
+                        url_list.append(cdn_url)
+                    # Edgecast specific
+                    elif cdn=='edgecast' and host_element.get('action', None) is not None: 
+                        action=host_element.get('action')
                 if debug: print(cdn, platform, url_list)
-                purge_response = cdn_instance.purge(url_list, platform=platform)
+                
+                if action=='purge':
+                    purge_response = cdn_instance.purge(url_list, platform=platform)
+                elif action=='load':
+                    purge_response = cdn_instance.load(url_list, platform=platform)
+                    
                 if debug: print(purge_response)
 
                 purge_response_http_status = cdn_instance.http_status
