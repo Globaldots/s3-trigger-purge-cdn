@@ -43,6 +43,7 @@ cdnConfigurations:
     user: "shalom@acme.com"
     password : "secret"
     platform: production
+    use_arl: False
 
    # To demonstrate how defaults are used, the configuration for highwinds is taken from the configuration file in vendors/highwinds
   

@@ -62,6 +62,7 @@ class Akamai:
     def __init__(self, **credentials):
         self.user = credentials.get('user', config_user)
         self.password = credentials.get('password', config_password)
+        self.use_arl = credentials.get('use_arl', False)
         assert self.password, "Error: missing API password"
         assert self.user, "Error: missing API user"
 
@@ -85,6 +86,8 @@ class Akamai:
         assert list_type in ['arl', 'cpcode'], "Error: %r is wrong list type, must be remove or invalidate" % (
             list_type)
 
+        if self.use_arl:
+            url_list = [self.get_arl(url) for url in url_list]
         payload = {
             "objects": url_list,
             "action": action,
@@ -97,15 +100,36 @@ class Akamai:
         return json.loads(result)
 
     # ..................................................................................................
-    def executeAPI(self, api_command, api_payload, query, verb='GET'):
+    def get_arl(self, url, **kwargs):
+        # if no parameters passed, initialize to an empty set.
+        kwargs = kwargs if kwargs is not None else {}
+        request_headers = {
+            "Pragma": "akamai-x-cache-on,akamai-x-cache-remote-on,akamai-x-check-cacheable,akamai-x-get-cache-key,akamai-x-get-true-cache-key,akamai-x-serial-no,akamai-x-get-request-id,akamai-x-get-client-ip,akamai-x-feo-trace"
+        }
+        r = requests.request('HEAD', url, headers=request_headers, json={}, params={} )
+        response_headers = dict(r.headers)
+        x_cache_key=response_headers.get("X-Cache-Key", "")
+        # typical response looks like
+        # 'L1/=/16382/705116/1d/castplus-usw2-prod-served-episodes.s3-us-west-2.amazonaws.com/1.html'
+        self.http_status = r.status_code
+        self.http_content = r.content
+        if x_cache_key:
+            arl = x_cache_key
+            return arl
+        else:
+            return url
+
+    # ..................................................................................................
+    def executeAPI(self, api_command, api_payload, query, verb='GET', headers={}):
         api_base_url = "https://api.ccu.akamai.com"
         action = api_command
         url = api_base_url + action
-        headers = {
+        request_headers = {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
         }
-        r = requests.request(verb, url, headers=headers, json=api_payload, params=query,
+        request_headers.update(headers)
+        r = requests.request(verb, url, headers=request_headers, json=api_payload, params=query,
                              auth=(self.user, self.password))
         self.http_status = r.status_code
         self.http_content = r.content
@@ -120,3 +144,8 @@ class Akamai:
 
 
 ####################################################################################################
+
+if __name__=="__main__":
+    akamai=Akamai()
+    res = akamai.purge(['https://www.globaldots.com/wordpress/wp-content/uploads/js_composer/custom.css?ver=4.3.4'])
+    print res

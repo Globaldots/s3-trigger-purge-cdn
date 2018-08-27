@@ -42,5 +42,8 @@ Creating an Edgecast API key: https://support.globaldots.com/hc/en-us/articles/1
 
 Adding authentication to Fastly purge: https://docs.fastly.com/guides/purging/authenticating-api-purge-requests 
 
+The Akamai section now supports purging of items protected by token authorization.
+This requires an additional API call to find out the ARL of the object, and is turned off by default.
+To turn this behaviour on, set the "use_arl" key in the yaml configuration to True.
 Ask your Akamai account manager or reseller for help with setting up a user for purging.
 

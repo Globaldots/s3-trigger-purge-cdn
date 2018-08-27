@@ -2,6 +2,8 @@
 Thumbs.db
 ehthumbs.db
 
+.private/
+.idea/
 *.pyc
 *.zip 
 
