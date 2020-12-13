@@ -5,10 +5,12 @@ s3-trigger-purge-cdn are python scripts that run as Lambda functions, and are tr
 Currently supported CDN vendors: 
 
 - Akamai 
+- Chinacache
 - Cloudflare
 - Edgecast
 - Fastly
 - Highwinds
+
 
 *Standalone Legacy mode* 
 - Edgecast
@@ -20,7 +22,7 @@ While I started as a project with separate parts for each CDN vendor, the standa
 Features:
 - *Python based*: Easy to set up and maintain
 - *Uses Lambda environment variables*: Modify the environment variables to modify the Lambda behavior
-- *purge or load*: On Edgecast, you can decide whether to purge from the edge or load onto the edge
+- *purge or load*: On Edgecast and Chinacache, you can decide whether to purge from the edge or load onto the edge
 
 Environment variables
 ==========

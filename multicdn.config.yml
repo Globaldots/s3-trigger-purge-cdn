@@ -1,5 +1,13 @@
 cdnDomains:
 
+  chinacache:
+    mybucket:
+      - host: www.acme.com.cn
+      - action: purge
+    mybucket-02:
+      - action: load
+      - host: www.wily-coyotte.com.cn
+
   edgecast:
     mybucket:
       - action: load 
@@ -30,7 +38,12 @@ cdnDomains:
     mybucket:
       - host: www.acme.co
       
-      
+# TODO enable only after Cloudinary integration done
+#  cloudinary:
+#    mybucket:
+#      - host: www.acme.co
+
+
       
 cdnConfigurations:
 
@@ -40,10 +53,10 @@ cdnConfigurations:
     platform: small
 
   akamai:
-    user: "shalom@acme.com"
-    password : "secret"
     platform: production
     use_arl: False
+    edgerc: ".edgerc"
+    edgerc_section: "default"
 
    # To demonstrate how defaults are used, the configuration for highwinds is taken from the configuration file in vendors/highwinds
   
@@ -53,3 +66,12 @@ cdnConfigurations:
 
   fastly:
     token: "xxxxxxxxxxxxxxxxxxxx"
+
+  chinacache:
+    token: "xxxxxxxxxxxxxxxxxxxx"
+
+# TODO enable only after Cloudinary integration done
+#  cloudinary:
+#    cloud_name: "xxxxxxxxxxxxxxxxxxxx"
+#    api_key:  "1234567890"
+#    api_secret: "yyyyyyyyyyyyyy"

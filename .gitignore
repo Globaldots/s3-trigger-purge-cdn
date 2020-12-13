@@ -50,3 +50,6 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# TODO add Cloudinary to project
+vendors/cloudinary/

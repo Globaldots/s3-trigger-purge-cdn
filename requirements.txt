@@ -1,4 +1,7 @@
 requests
 urllib3[secure]
+edgegrid-python
+# TODO uncomment cloudinary
+# cloudinary
 
 # pip install -r requirements.txt -t .
