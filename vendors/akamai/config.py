@@ -3,3 +3,6 @@
 user = 'shalom@acme.com'
 password = 'mysecret'
 platform = 'production'
+
+edgerc_section = 'default'
+edgerc_location = '~/.edgerc'

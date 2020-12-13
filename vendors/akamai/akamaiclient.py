@@ -1,9 +1,9 @@
 import requests
 import json
 import os
-# Akamai documentation:
-# https://api.ccu.akamai.com/ccu/v2/docs/
 
+from akamai.edgegrid import EdgeGridAuth, EdgeRc
+from urlparse import urljoin
 
 # the config file can be used or skipped.
 # if it is used, its credentials will be used as a default
@@ -15,6 +15,8 @@ try:
 except:
     config_user=None
     config_password = None
+    edgerc_location = None
+    edgerc_section = None
 
 try:
     config_user = config.user
@@ -25,6 +27,16 @@ try:
     config_password = config.password
 except:
     config_password=None
+
+try:
+    edgerc_location = config.edgerc_location
+except:
+    edgerc_location=None
+
+try:
+    edgerc_section = config.edgerc_section
+except:
+    edgerc_section=None
 
 
 isLambda = True if "LAMBDA_RUNTIME_DIR" in os.environ else False
@@ -63,8 +75,18 @@ class Akamai:
         self.user = credentials.get('user', config_user)
         self.password = credentials.get('password', config_password)
         self.use_arl = credentials.get('use_arl', False)
+
+        self.edgerc_location = credentials.get('edgerc', edgerc_location)
+        self.edgerc_section = credentials.get('edgerc_section', edgerc_section)
+
         assert self.password, "Error: missing API password"
         assert self.user, "Error: missing API user"
+        assert self.edgerc_location, "Error: missing edgerc file"
+        assert self.edgerc_section, "Error: missing edgerc section"
+
+        self.edgerc = EdgeRc(self.edgerc_location)
+        section = self.edgerc_section
+        self.baseurl = 'https://%s' % self.edgerc.get(section, 'host')
 
         return None
 
@@ -82,19 +104,14 @@ class Akamai:
         assert platform in ['production', 'staging'], "Error: %r is wrong platform, must be production or staging" % (
             platform)
         assert queue in ['default', 'emergency'], "Error: %r is wrong queue, must be default or emergency" % (queue)
-        assert action in ['remove', 'invalidate'], "Error: %r is wrong action, must be remove or invalidate" % (action)
-        assert list_type in ['arl', 'cpcode'], "Error: %r is wrong list type, must be remove or invalidate" % (
+        assert action in ['delete', 'invalidate'], "Error: %r is wrong action, must be delete or invalidate" % (action)
+        assert list_type in ['arl', 'cpcode'], "Error: %r is wrong list type, must be arl or cpcode" % (
             list_type)
 
         if self.use_arl:
             url_list = [self.get_arl(url) for url in url_list]
-        payload = {
-            "objects": url_list,
-            "action": action,
-            "type": list_type,
-            "domain": platform
-        }
-        command = "/ccu/v2/queues/%s" % (queue)
+        payload = { "objects": url_list }
+        command = "/ccu/v3/%s/url/%s" % (action, platform)
         query = {}
         result = self.executeAPI(command, payload, query, verb='POST')
         return json.loads(result)
@@ -121,16 +138,17 @@ class Akamai:
 
     # ..................................................................................................
     def executeAPI(self, api_command, api_payload, query, verb='GET', headers={}):
-        api_base_url = "https://api.ccu.akamai.com"
+        api_base_url = self.baseurl
         action = api_command
-        url = api_base_url + action
+        url = urljoin(self.baseurl,  action)
         request_headers = {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
         }
         request_headers.update(headers)
-        r = requests.request(verb, url, headers=request_headers, json=api_payload, params=query,
-                             auth=(self.user, self.password))
+        session = requests.Session()
+        session.auth = EdgeGridAuth.from_edgerc(self.edgerc, self.edgerc_section)
+        r =session.request(verb, url, headers=request_headers, json=api_payload, params=query)
         self.http_status = r.status_code
         self.http_content = r.content
         content = r.content
