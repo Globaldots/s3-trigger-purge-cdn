@@ -49,16 +49,16 @@ s3= boto3.client('s3', region_name=lambda_region)
 aws_logs= boto3.client('logs', region_name=lambda_region)      
 
 boto_response=iam.get_user()
-if debug: print pprint.pprint(boto_response)
+if debug: print(pprint.pprint(boto_response))
 
 accountid = boto_response["User"]["UserId"]
-print "Account is %s" % accountid
+print("Account is %s" % accountid)
 
 # Send all config strings as lambda variables
-variables = {key:val for (key,val) in config.__dict__.items() if not "__" in key and type(val) is str}
+variables = {key:val for (key,val) in list(config.__dict__.items()) if not "__" in key and type(val) is str}
 
 helper.CreateZip(zipfileName, verbose=True)
-print "Zip file %s created" % zipfileName
+print("Zip file %s created" % zipfileName)
 
 
 AssumeRolePolicy = {
@@ -77,7 +77,7 @@ try:
     boto_response = iam.get_role(
         RoleName=RoleName
     )
-    if debug: print pprint.pprint(boto_response)
+    if debug: print(pprint.pprint(boto_response))
 except:
     boto_response = iam.create_role(
         RoleName=RoleName,
@@ -85,11 +85,11 @@ except:
         AssumeRolePolicyDocument=json.dumps(AssumeRolePolicy),
         Description='Role to execute Lambda'
     )
-    if debug: print pprint.pprint(boto_response)
+    if debug: print(pprint.pprint(boto_response))
 
 
 role = boto_response['Role']['Arn']
-print "Have Role %r" % role
+print("Have Role %r" % role)
 
 policies = [
             'arn:aws:iam::aws:policy/AWSLambdaBasicExecuteRole', 
@@ -97,19 +97,19 @@ policies = [
             ]
 for policy in policies:             
     try:
-        print "Adding policy", policy
+        print("Adding policy", policy)
         boto_response = iam.attach_role_policy(
             RoleName=RoleName,
             PolicyArn=policy
         )
-        print "Policy added"
-        if debug: print pprint.pprint(boto_response)
+        print("Policy added")
+        if debug: print(pprint.pprint(boto_response))
     except:
         pass
 
 lambda_arn = "arn:aws:lambda:%s:%s:function:%s" % (lambda_region, accountid, lambda_function)
 
-print "Creating function", lambda_function, "in region" , lambda_region
+print("Creating function", lambda_function, "in region" , lambda_region)
 try: 
     boto_response=aws_lambda.create_function(
         FunctionName=lambda_function,
@@ -130,15 +130,15 @@ try:
             'domain': 'admin'
         }
     )
-    if debug: print pprint.pprint(boto_response)
+    if debug: print(pprint.pprint(boto_response))
 except: 
     boto_response=aws_lambda.update_function_code(
         FunctionName=lambda_function,
         ZipFile=open(zipfileName, 'rb').read() , 
         Publish=True
         )
-    if debug: print pprint.pprint(boto_response)
-    print 'function %r in %s updated' % (lambda_function, lambda_region)
+    if debug: print(pprint.pprint(boto_response))
+    print('function %r in %s updated' % (lambda_function, lambda_region))
     
     boto_response=aws_lambda.update_function_configuration(
         FunctionName=lambda_function,
@@ -149,9 +149,9 @@ except:
             'Variables': variables
         }
         )
-    if debug: print pprint.pprint(boto_response)
+    if debug: print(pprint.pprint(boto_response))
     
-print "Function", lambda_arn, "in region" , lambda_region, "created"
+print("Function", lambda_arn, "in region" , lambda_region, "created")
 
 permission_id = "%s_%s" % (sourcebucket.replace('.', '_'), lambda_function)
 
@@ -164,13 +164,13 @@ try:
         SourceArn='arn:aws:events:::%s' % ( sourcebucket ) ,
         SourceAccount = accountid
     )
-    if debug: print pprint.pprint(boto_response)
+    if debug: print(pprint.pprint(boto_response))
 except:
     boto_response=aws_lambda.remove_permission(
         FunctionName=lambda_function,
         StatementId=permission_id
     )
-    if debug: print pprint.pprint(boto_response)
+    if debug: print(pprint.pprint(boto_response))
     
     boto_response=aws_lambda.add_permission(
         FunctionName=lambda_function,
@@ -180,9 +180,9 @@ except:
         SourceArn='arn:aws:events:::%s' % ( sourcebucket ) ,
         SourceAccount = accountid
     )
-    if debug: print pprint.pprint(boto_response)
+    if debug: print(pprint.pprint(boto_response))
 
-print "Added permisions for S3 bucket", sourcebucket, "to call lambda"
+print("Added permisions for S3 bucket", sourcebucket, "to call lambda")
     
 boto_response = s3.put_bucket_notification_configuration(
     Bucket=sourcebucket,
@@ -197,20 +197,20 @@ boto_response = s3.put_bucket_notification_configuration(
         ]
     }
 )   
-if debug: print pprint.pprint(boto_response)
+if debug: print(pprint.pprint(boto_response))
 
-print "Added trigger on S3 bucket", sourcebucket, "to call lambda"
+print("Added trigger on S3 bucket", sourcebucket, "to call lambda")
 
 try: 
     boto_response = aws_logs.create_log_group(
         logGroupName='/aws/lambda/{}'.format(lambda_function)
     )
 
-    if debug: print pprint.pprint(boto_response)
+    if debug: print(pprint.pprint(boto_response))
 except: 
     pass
     
-print "Created log group", '/aws/lambda/{}'.format(lambda_function)
+print("Created log group", '/aws/lambda/{}'.format(lambda_function))
 
 quit()
 

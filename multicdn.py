@@ -33,7 +33,7 @@ class Multicdn:
         for cdn in cdn_list:
             default_platform = yml[cdn_configurations].get(cdn, {}).get('platform' , None)
             # bucketmap = {something['Name']:something['Value'] for something in cdn_item['Attributes']}
-            for bucket_name, host_config_list in cdn_list[cdn].iteritems():
+            for bucket_name, host_config_list in cdn_list[cdn].items():
                 if bucket_name not in domain_map:
                     domain_map[bucket_name] = {}
                 if cdn not in domain_map[bucket_name]:
@@ -62,4 +62,4 @@ class Multicdn:
 if __name__=='__main__':
     s = Multicdn()
     x = s.getConf()
-    print "this is local", json.dumps(x)
+    print("this is local", json.dumps(x))

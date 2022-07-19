@@ -8,7 +8,7 @@
 # version 1:   Initial version
 # Version 2:   full multicdn support
 
-from __future__ import print_function
+
 import os
 import json
 import sys
@@ -58,7 +58,7 @@ def main(event, context=None):
         # The next structure may be too complex, as tests show that S3 fires events one at a time
         # However, we cannot be sure that it will always be so.
         #
-        for cdn, cdn_platform_array in bucket_cdn_array.iteritems():
+        for cdn, cdn_platform_array in bucket_cdn_array.items():
             cdn_config=multi_cdn_configuration.get(cdn, {})
             try:
                 cdn_class = globals()[cdn]
@@ -68,7 +68,7 @@ def main(event, context=None):
                 continue
                 # if cdn object failed to instantiate - ignore it and skip to next
 
-            for platform, host_list in cdn_platform_array.iteritems():
+            for platform, host_list in cdn_platform_array.items():
                 url_list=[]
                 action='purge' # by default
                 for host_element in host_list:
@@ -99,7 +99,7 @@ def main(event, context=None):
                         }
                 # if  purge_response_http_status not in range (200,299) or 'error' in cdn_instance.http_content.lower():
                 # cloudflare was returning false positives because their response has an empty 'error' key even on success
-                if purge_response_http_status not in range(200, 299):
+                if purge_response_http_status not in list(range(200, 299)):
                     logger.error('HTTP status: {} ; {}'.format(purge_response_http_status, json.dumps(cdnEvent) ) )
                 else:
                     logger.info(json.dumps(cdnEvent))

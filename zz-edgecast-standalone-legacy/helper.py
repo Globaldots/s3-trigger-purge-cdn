@@ -7,7 +7,7 @@ def zipdir(path, ziph, verbose=False):
     for root, dirs, files in os.walk(path):
         for file in files:
             if '.zip' not in file: 
-                if verbose: print "Zipping", os.path.join(root, file)
+                if verbose: print("Zipping", os.path.join(root, file))
                 ziph.write(os.path.join(root, file))
 
 def CreateZip(filename, verbose=False):

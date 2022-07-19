@@ -51,6 +51,6 @@ if __name__ == '__main__':
 
     func = getattr(module, exec_function)
 
-    print(func(event) )
+    print((func(event) ))
 
 

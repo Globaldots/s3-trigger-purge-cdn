@@ -8,7 +8,7 @@
 # version 1.0:   Initial version
 # version 1.1:   Support variable number of parm
 
-from __future__ import print_function
+
 import os
 import json 
 import logging

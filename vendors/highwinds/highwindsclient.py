@@ -9,7 +9,7 @@ import os
 
 # These will only by loaded during Lambda cold start. Should this code be placed in the main function instead?
 try:
-    import config
+    from . import config
 except:
     config_user=None
     config_password = None
@@ -39,7 +39,7 @@ if debug:
         import http.client as http_client
     except ImportError:
         # Python 2
-        import httplib as http_client
+        import http.client as http_client
     http_client.HTTPConnection.debuglevel = 1
 
     # You must initialize logging, otherwise you'll not see debug output.

@@ -6,6 +6,7 @@ ehthumbs.db
 .idea/
 *.pyc
 *.zip 
+*.bak
 
 # Folder config file
 Desktop.ini

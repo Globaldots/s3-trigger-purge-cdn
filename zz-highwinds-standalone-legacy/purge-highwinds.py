@@ -7,7 +7,7 @@
 # Changelog
 # version 1:   Initial version
 
-from __future__ import print_function
+
 import os
 import json 
 import logging

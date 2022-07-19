@@ -14,7 +14,7 @@ if debug:
         import http.client as http_client
     except ImportError:
         # Python 2
-        import httplib as http_client
+        import http.client as http_client
     http_client.HTTPConnection.debuglevel = 1
 
     # You must initialize logging, otherwise you'll not see debug output.
@@ -127,7 +127,7 @@ if __name__=="__main__":
     user=credentials[0]['user']
     password=credentials[0]['password']
     highwinds = Highwinds(user, password)
-    print highwinds.masterAccount
+    print(highwinds.masterAccount)
     account='t8i3z7k8'
     account='b6g8z3d9'
     # hcs_command = '/api/v1/accounts/' + account + '/hcs/tenants'
@@ -143,4 +143,4 @@ if __name__=="__main__":
     # result = highwinds.executeAPI( hcs_command,  payload, query )
     # print result
 
-    print json.dumps(highwinds.getHCS( account) )
+    print(json.dumps(highwinds.getHCS( account) ))

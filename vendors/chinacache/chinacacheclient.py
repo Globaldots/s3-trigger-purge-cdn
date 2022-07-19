@@ -4,7 +4,7 @@ import json
 
 # These will only by loaded during Lambda cold start. Should this code be placed in the main function instead?
 try:
-    import config
+    from . import config
 except:
     auth_token=None
 
